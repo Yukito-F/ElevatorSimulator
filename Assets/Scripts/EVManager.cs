@@ -37,7 +37,17 @@ public class EVManager : MonoBehaviour
         standbyList.Add(new StandbyInfo(user));
     }
 
-    //public User standbyPop()
-    //{
-    //}
+    public User standbyPop(int currentFloor, bool up)
+    {
+        StandbyInfo temp =  standbyList.Find(x => (x.currentFloor == currentFloor && x.up == up));
+        if (!ReferenceEquals(temp, null))
+        {
+            standbyList.Remove(temp);
+            return temp.user;
+        }
+        else
+        {
+            return null;
+        }
+    }
 }

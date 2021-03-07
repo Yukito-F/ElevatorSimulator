@@ -1288,6 +1288,7 @@ GameObject:
   - component: {fileID: 1467087758}
   - component: {fileID: 1467087756}
   - component: {fileID: 1467087759}
+  - component: {fileID: 1467087760}
   m_Layer: 0
   m_Name: Elevator
   m_TagString: Untagged
@@ -1302,7 +1303,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1467087755}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d493cc2eed61dda4682605c107eb55ec, type: 3}
   m_Name: 
@@ -1319,6 +1320,7 @@ MonoBehaviour:
   diffError_: 0
   intError_: 0
   force_: {x: 0, y: 0, z: 0}
+  move: 1
 --- !u!4 &1467087757
 Transform:
   m_ObjectHideFlags: 0
@@ -1345,7 +1347,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1467087755}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2a2579c22835dc944ac53b1593bbea50, type: 3}
   m_Name: 
@@ -1353,6 +1355,8 @@ MonoBehaviour:
   targetFloor: 2
   currentFloor: 1
   FloorMax: 3
+  move: 1
+  up: 1
 --- !u!54 &1467087759
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1369,6 +1373,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 122
   m_CollisionDetection: 0
+--- !u!114 &1467087760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1467087755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e591bd012f1eb444875bfd90827d918, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1722858208
 GameObject:
   m_ObjectHideFlags: 0

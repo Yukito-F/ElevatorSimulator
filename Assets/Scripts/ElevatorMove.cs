@@ -11,8 +11,8 @@ public class ElevatorMove : MonoBehaviour
     float[] convert = { 0, 2, 5, 8 };
 
     float Kp = 0.01f;
-    bool move = true;
-    bool up = true;
+    public bool move = true;
+    public bool up = true;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,6 +26,7 @@ public class ElevatorMove : MonoBehaviour
         if(Mathf.Abs(transform.position.y - convert[targetFloor]) < 0.01f)
         {
             currentFloor = targetFloor;
+            move = false;
             if (up)
             {
                 if (FloorMax > targetFloor) targetFloor++;
