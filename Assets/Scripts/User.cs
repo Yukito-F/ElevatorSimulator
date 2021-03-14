@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class User : MonoBehaviour
 {
-    public int targetFloor = 2;
+    public int targetFloor = 1;
     public int curremtFloor = 1;
 
     bool move = true;
@@ -27,10 +27,19 @@ public class User : MonoBehaviour
         }
     }
 
-    
-
     public void shiftTarget(GameObject obj)
     {
         targetObj = obj;
+    }
+
+    public void statusUpdate()
+    {
+        curremtFloor = targetFloor;
+
+        do
+        {
+            targetFloor = Random.Range(1, 6);
+        }
+        while (curremtFloor == targetFloor);
     }
 }

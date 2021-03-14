@@ -46,9 +46,12 @@ public class EV : MonoBehaviour
             if (riderList.Count != 0)
             {
                 RideInfo tempUser = riderList.Find(x => x.targetFloor == evMove.currentFloor);
-                rideStandbyList.Add(tempUser);
-                if (!ReferenceEquals(tempUser.user, null))
+                if (tempUser.user != null)
+                {
+                    riderList.Remove(tempUser);
+                    rideStandbyList.Add(tempUser);
                     tempUser.user.shiftTarget(evManager);
+                }
             }
 
             if (rideStandbyList.Count == 0) evMove.move = true;
@@ -66,8 +69,8 @@ public class EV : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         User temp = other.GetComponent<User>();
-        RideInfo tempUser = riderList.Find(x => x.user == temp);
-        riderList.Remove(tempUser);
+        RideInfo tempUser = rideStandbyList.Find(x => x.user == temp);
+        rideStandbyList.Remove(tempUser);
     }
 
 }

@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class ElevatorMove : MonoBehaviour
 {
-    public int targetFloor = 2;
+    int targetFloor = 2;
     public int currentFloor = 1;
-    public int FloorMax = 3;
+    int FloorMax = 5;
 
-    float[] convert = { 0, 2, 5, 8 };
+    float[] convert = { 0, 2, 5, 8 , 11, 14};
 
-    float Kp = 0.01f;
+    float Kp = 0.02f;
     public bool move = true;
     public bool up = true;
     // Start is called before the first frame update

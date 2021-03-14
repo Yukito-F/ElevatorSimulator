@@ -20,22 +20,11 @@ public class EVManager : MonoBehaviour
 
     public List<StandbyInfo> standbyList = new List<StandbyInfo>();
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OnTriggerEnter(Collider other)
     {
+        User temp = other.GetComponent<User>();
+        temp.statusUpdate();
         standbyAdd(other.gameObject);
-        Debug.Log(other.gameObject);
     }
 
     public void standbyAdd(GameObject user)
@@ -45,15 +34,8 @@ public class EVManager : MonoBehaviour
 
     public User standbyPop(int currentFloor, bool up)
     {
-        StandbyInfo temp =  standbyList.Find(x => (x.currentFloor == currentFloor && x.up == up));
-        if (!ReferenceEquals(temp, null))
-        {
-            standbyList.Remove(temp);
-            return temp.user;
-        }
-        else
-        {
-            return null;
-        }
+        StandbyInfo temp = standbyList.Find(x => (x.currentFloor == currentFloor && x.up == up));
+        standbyList.Remove(temp);
+        return temp.user;
     }
 }
