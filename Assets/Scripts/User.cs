@@ -27,11 +27,7 @@ public class User : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        EVManager temp = other.GetComponent<EVManager>();
-        temp.standbyAdd(this.gameObject);
-    }
+    
 
     public void shiftTarget(GameObject obj)
     {

@@ -32,6 +32,12 @@ public class EVManager : MonoBehaviour
         
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        standbyAdd(other.gameObject);
+        Debug.Log(other.gameObject);
+    }
+
     public void standbyAdd(GameObject user)
     {
         standbyList.Add(new StandbyInfo(user));

@@ -36,8 +36,38 @@ public class EV : MonoBehaviour
         if (!evMove.move)
         {
             User temp = evManager_s.standbyPop(evMove.currentFloor, evMove.up);
-            if (temp != null) rideStandbyList.Add(new RideInfo(temp));
+            // 乗車待機リストに人がいれば
+            if (temp != null)
+            {
+                rideStandbyList.Add(new RideInfo(temp));
+                temp.shiftTarget(this.gameObject);
+            }
+
+            if (riderList.Count != 0)
+            {
+                RideInfo tempUser = riderList.Find(x => x.targetFloor == evMove.currentFloor);
+                rideStandbyList.Add(tempUser);
+                if (!ReferenceEquals(tempUser.user, null))
+                    tempUser.user.shiftTarget(evManager);
+            }
+
             if (rideStandbyList.Count == 0) evMove.move = true;
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        User temp = other.GetComponent<User>();
+        RideInfo tempUser = rideStandbyList.Find(x => x.user == temp);
+        rideStandbyList.Remove(tempUser);
+        riderList.Add(tempUser);
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        User temp = other.GetComponent<User>();
+        RideInfo tempUser = riderList.Find(x => x.user == temp);
+        riderList.Remove(tempUser);
+    }
+
 }
