@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class EVManager : MonoBehaviour
@@ -23,19 +22,16 @@ public class EVManager : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         User temp = other.GetComponent<User>();
-        temp.statusUpdate();
-        standbyAdd(other.gameObject);
-    }
-
-    public void standbyAdd(GameObject user)
-    {
-        standbyList.Add(new StandbyInfo(user));
+        if (temp.targetObj == this.gameObject)
+        {
+            standbyList.Add(new StandbyInfo(other.gameObject));
+        }
     }
 
     public User standbyPop(int currentFloor, bool up)
     {
-        StandbyInfo temp = standbyList.Find(x => (x.currentFloor == currentFloor && x.up == up));
-        standbyList.Remove(temp);
+        StandbyInfo temp = standbyList.Find(x => x.currentFloor == currentFloor && x.up == up);
+        if(temp.user != null) standbyList.Remove(temp);
         return temp.user;
     }
 }

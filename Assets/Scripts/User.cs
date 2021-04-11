@@ -1,21 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class User : MonoBehaviour
 {
-    public int targetFloor = 1;
+    public int targetFloor;
     public int curremtFloor = 1;
 
-    bool move = true;
-    GameObject targetObj;
-    // Start is called before the first frame update
+    bool move = false;
+    public GameObject targetObj;
+
     void Start()
     {
-        targetObj = GameObject.Find("EVManager");
+        statusUpdate();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (move)
@@ -23,13 +20,27 @@ public class User : MonoBehaviour
             Vector3 target = targetObj.transform.position;
             target.y = transform.position.y;
             transform.LookAt(target);
-            transform.Translate(Vector3.forward * 0.02f);
+            transform.Translate(Vector3.forward * 0.05f);
+        }
+
+        if (transform.position.y < 0)
+        {
+            Vector3 temp = transform.position;
+            temp.y = 20;
+            transform.position = temp;
+            Debug.Log("Fall");
         }
     }
 
     public void shiftTarget(GameObject obj)
     {
         targetObj = obj;
+        move = true;
+    }
+
+    public void stopMove()
+    {
+        move = false;
     }
 
     public void statusUpdate()
@@ -41,5 +52,29 @@ public class User : MonoBehaviour
             targetFloor = Random.Range(1, 6);
         }
         while (curremtFloor == targetFloor);
+
+        switch (targetFloor)
+        {
+            case 1:
+                GetComponent<Renderer>().material.color = Color.white;
+                break;
+            case 2:
+                GetComponent<Renderer>().material.color = Color.blue;
+                break;
+            case 3:
+                GetComponent<Renderer>().material.color = Color.red;
+                break;
+            case 4:
+                GetComponent<Renderer>().material.color = Color.green;
+                break;
+            case 5:
+                GetComponent<Renderer>().material.color = Color.yellow;
+                break;
+            default:
+                GetComponent<Renderer>().material.color = Color.black;
+                break;
+        }
+
+        move = true;
     }
 }

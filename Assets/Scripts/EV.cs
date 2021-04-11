@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class EV : MonoBehaviour
@@ -16,61 +15,86 @@ public class EV : MonoBehaviour
     }
 
     public List<RideInfo> riderList = new List<RideInfo>();
-    public List<RideInfo> rideStandbyList = new List<RideInfo>();
+    public List<RideInfo> bufferList = new List<RideInfo>();
 
     ElevatorMove evMove;
     GameObject evManager;
     EVManager evManager_s;
+    GameObject taskArea;
 
-    // Start is called before the first frame update
+    public int capacity = 10;
+    int count;
+
+    bool openFlag = true;
+
     void Start()
     {
         evMove = GetComponent<ElevatorMove>();
         evManager = GameObject.Find("EVManager");
         evManager_s = evManager.GetComponent<EVManager>();
+        taskArea = GameObject.Find("TaskArea");
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!evMove.move)
         {
-            User temp = evManager_s.standbyPop(evMove.currentFloor, evMove.up);
             // 乗車待機リストに人がいれば
-            if (temp != null)
+            if (evManager_s.standbyList.Count > 0 && count < capacity)
             {
-                rideStandbyList.Add(new RideInfo(temp));
-                temp.shiftTarget(this.gameObject);
+                User temp = evManager_s.standbyPop(evMove.currentFloor, evMove.up);
+                if (temp != null)
+                {
+                    bufferList.Add(new RideInfo(temp));
+                    temp.shiftTarget(this.gameObject);
+                    count++;
+                }
             }
 
-            if (riderList.Count != 0)
+            if (riderList.Count > 0)
             {
                 RideInfo tempUser = riderList.Find(x => x.targetFloor == evMove.currentFloor);
                 if (tempUser.user != null)
                 {
                     riderList.Remove(tempUser);
-                    rideStandbyList.Add(tempUser);
-                    tempUser.user.shiftTarget(evManager);
+                    bufferList.Add(tempUser);
+                    tempUser.user.shiftTarget(taskArea);
+                    count--;
                 }
             }
 
-            if (rideStandbyList.Count == 0) evMove.move = true;
+            if (bufferList.Count > 0)
+            {
+                evMove.doorOpen();
+                openFlag = false;
+            }
+            else
+            {
+                evMove.restart(openFlag);
+                openFlag = true;
+            }
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         User temp = other.GetComponent<User>();
-        RideInfo tempUser = rideStandbyList.Find(x => x.user == temp);
-        rideStandbyList.Remove(tempUser);
-        riderList.Add(tempUser);
+        if (temp.targetObj == this.gameObject)
+        {
+            RideInfo tempUser = bufferList.Find(x => x.user == temp);
+            riderList.Add(tempUser);
+            bufferList.Remove(tempUser);
+        }   
     }
+
 
     private void OnTriggerExit(Collider other)
     {
         User temp = other.GetComponent<User>();
-        RideInfo tempUser = rideStandbyList.Find(x => x.user == temp);
-        rideStandbyList.Remove(tempUser);
+        if (temp.targetObj == taskArea)
+        {
+            RideInfo tempUser = bufferList.Find(x => x.user == temp);
+            bufferList.Remove(tempUser);
+        }
     }
-
 }

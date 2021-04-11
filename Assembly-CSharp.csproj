@@ -65,7 +65,9 @@
     <Compile Include="Assets\Scripts\EV.cs" />
     <Compile Include="Assets\Scripts\EVManager.cs" />
     <Compile Include="Assets\Scripts\ElevatorMove.cs" />
+    <Compile Include="Assets\Scripts\HumanGenerator.cs" />
     <Compile Include="Assets\Scripts\Movetest.cs" />
+    <Compile Include="Assets\Scripts\Task.cs" />
     <Compile Include="Assets\Scripts\User.cs" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.15f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
