@@ -3,6 +3,7 @@
 public class Task : MonoBehaviour
 {
     GameObject evManager;
+    public int count = 0;
 
     void Start()
     {
@@ -16,6 +17,8 @@ public class Task : MonoBehaviour
         {
             temp.statusUpdate();
             temp.shiftTarget(evManager);
-        }   
+
+            count++;
+        }
     }
 }
