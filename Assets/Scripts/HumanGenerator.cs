@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+// 最初に一定人数の乗客を生成するスクリプト
 public class HumanGenerator : MonoBehaviour
 {
     GameObject user;

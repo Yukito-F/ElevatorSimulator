@@ -64,9 +64,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\EV.cs" />
     <Compile Include="Assets\Scripts\EVManager.cs" />
-    <Compile Include="Assets\Scripts\ElevatorMove.cs" />
     <Compile Include="Assets\Scripts\HumanGenerator.cs" />
-    <Compile Include="Assets\Scripts\Movetest.cs" />
     <Compile Include="Assets\Scripts\Task.cs" />
     <Compile Include="Assets\Scripts\User.cs" />
     <Reference Include="UnityEngine">

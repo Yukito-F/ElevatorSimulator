@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+// 乗客のスクリプト
 public class User : MonoBehaviour
 {
     public int targetFloor;
@@ -10,6 +11,7 @@ public class User : MonoBehaviour
 
     void Start()
     {
+        // 初期の目標階の設定
         statusUpdate();
     }
 
@@ -32,17 +34,14 @@ public class User : MonoBehaviour
         }
     }
 
+    // 目標地点の更新
     public void shiftTarget(GameObject obj)
     {
         targetObj = obj;
         move = true;
     }
 
-    public void stopMove()
-    {
-        move = false;
-    }
-
+    // 目標階の更新、それに応じた色の変更
     public void statusUpdate()
     {
         curremtFloor = targetFloor;
