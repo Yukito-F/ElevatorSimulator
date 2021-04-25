@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+// フロアの端に到達したら目標階を変更するスクリプト
 public class Task : MonoBehaviour
 {
     GameObject evManager;
