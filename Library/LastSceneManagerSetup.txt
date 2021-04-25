@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scenes/EvTest.unity
+- path: Assets/Scenes/SimpleMove.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
