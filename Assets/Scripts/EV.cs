@@ -9,10 +9,13 @@ public class EV : MonoBehaviour
     {
         public User user { get; }
         public int targetFloor { get; }
+        public bool up { get; }
+
         public RideInfo(User obj)
         {
             user = obj;
             targetFloor = obj.targetFloor;
+            up = user.targetFloor > user.curremtFloor;
         }
     }
 
@@ -24,9 +27,9 @@ public class EV : MonoBehaviour
     GameObject taskArea;
 
     public int capacity = 10;
-    int count;
+    public int count;
 
-    int targetFloor = 2;
+    public int targetFloor = 2;
     public int currentFloor = 1;
     int FloorMax = 5;
 
@@ -34,11 +37,9 @@ public class EV : MonoBehaviour
 
     public bool move = true;
     public bool up = true;
-    bool actFlag = true;
+    public int target;
 
     GameObject door;
-
-    bool openFlag = true;
 
     // 各種ゲームオブジェクトの取得
     void Start()
@@ -47,30 +48,23 @@ public class EV : MonoBehaviour
         evManager_s = evManager.GetComponent<EVManager>();
         taskArea = GameObject.Find("TaskArea");
         door = transform.Find("door").gameObject;
+        doorClose();
     }
 
     void Update()
     {
         if (move)
         {
-            // 固定：マイフレーム0.05fずつ上下に移動
-            transform.Translate(0, (targetFloor - currentFloor) * 0.05f, 0);
-
             // 目標階に到達次第停止、進行方向の更新
             if (Mathf.Abs(transform.position.y - floor2y[targetFloor]) < 0.01f)
             {
                 currentFloor = targetFloor;
-                if (up)
-                {
-                    if (FloorMax > targetFloor) targetFloor++;
-                    else up = false;
-                }
-                else
-                {
-                    if (targetFloor > 1) targetFloor--;
-                    else up = true;
-                }
                 move = false;
+            }
+            else
+            {
+                // 固定：マイフレーム0.05fずつ上下に移動
+                transform.Translate(0, (targetFloor - currentFloor) * 0.05f, 0);
             }
         }
         else
@@ -78,12 +72,26 @@ public class EV : MonoBehaviour
             // 乗車待機リストに人がいるときの処理
             if (evManager_s.standbyList.Count > 0 && count < capacity)
             {
-                User temp = evManager_s.standbyPop(currentFloor, up);
-                if (temp != null)
+                if(riderList.Count == 0 && bufferList.Count == 0)
                 {
-                    bufferList.Add(new RideInfo(temp));
-                    temp.shiftTarget(this.gameObject);
-                    count++;
+                    User temp = evManager_s.standbyPop(currentFloor);
+                    if (temp != null)
+                    {
+                        up = temp.targetFloor > currentFloor;
+                        bufferList.Add(new RideInfo(temp));
+                        temp.shiftTarget(this.gameObject);
+                        count++;
+                    }
+                }
+                else
+                {
+                    User temp = evManager_s.standbyPop(currentFloor, up);
+                    if (temp != null)
+                    {
+                        bufferList.Add(new RideInfo(temp));
+                        temp.shiftTarget(this.gameObject);
+                        count++;
+                    }
                 }
             }
 
@@ -105,13 +113,39 @@ public class EV : MonoBehaviour
             {
                 // 処理中の人がいるときはドアを開ける
                 doorOpen();
-                openFlag = false;
             }
             else
             {
-                // いなければリスタート
-                restart(openFlag);
-                openFlag = true;
+                doorClose();
+
+                if (riderList.Count > 0)
+                {
+                    up = riderList[0].up;
+                }
+                else
+                {
+                    target = evManager_s.serch();
+                    if(target != 0 && target != currentFloor){
+                        up = target > currentFloor;
+                    }
+                }
+
+                if (evManager_s.standbyList.Count > 0 || riderList.Count > 0)
+                {
+                    // いなければリスタート
+                    if (up)
+                    {
+                        if (targetFloor < FloorMax) targetFloor++;
+                        if (targetFloor == FloorMax) up = false;
+                    }
+                    else
+                    {
+                        if (targetFloor > 1) targetFloor--;
+                        if (targetFloor == 1) up = true;
+                    }
+
+                    move = true;
+                }
             }
         }
     }
@@ -125,7 +159,7 @@ public class EV : MonoBehaviour
             RideInfo tempUser = bufferList.Find(x => x.user == temp);
             riderList.Add(tempUser);
             bufferList.Remove(tempUser);
-        }   
+        }
     }
 
     // 降車時の処理
@@ -139,32 +173,14 @@ public class EV : MonoBehaviour
         }
     }
 
-    // 再発進の処理
-    public void restart(bool flag)
-    {
-        if (actFlag)
-        {
-            actFlag = false;
-            if (flag)
-            {
-                _restart();
-            }
-            else
-            {
-                Invoke("_restart", 1.0f);
-            }
-        }
-    }
-
-    void _restart()
-    {
-        if (!door.activeSelf) door.SetActive(true);
-        move = true;
-        actFlag = true;
-    }
 
     public void doorOpen()
     {
         if (door.activeSelf) door.SetActive(false);
+    }
+
+    public void doorClose()
+    {
+        if (!door.activeSelf) door.SetActive(true);
     }
 }

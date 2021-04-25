@@ -37,8 +37,35 @@ public class EVManager : MonoBehaviour
     // 待機者リストからの取り出し
     public User standbyPop(int currentFloor, bool up)
     {
-        StandbyInfo temp = standbyList.Find(x => x.currentFloor == currentFloor && x.up == up);
-        if(temp.user != null) standbyList.Remove(temp);
+        StandbyInfo temp = standbyList.Find(x => (x.currentFloor == currentFloor) && !(x.up ^ up));
+        if (temp.user != null)
+        {
+            standbyList.Remove(temp);
+        }
         return temp.user;
+    }
+
+    // 待機者リストからの取り出し、方向指定なし
+    public User standbyPop(int currentFloor)
+    {
+        StandbyInfo temp = standbyList.Find(x => x.currentFloor == currentFloor);
+        if (temp.user != null)
+        {
+            standbyList.Remove(temp);
+        }
+        return temp.user;
+    }
+
+    // 待機者リストの検索
+    public int serch()
+    {
+        if (standbyList.Count > 0)
+        {
+            return standbyList[0].currentFloor;
+        }
+        else
+        {
+            return 0;
+        }
     }
 }

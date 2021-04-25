@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 // 乗客のスクリプト
 public class User : MonoBehaviour
@@ -6,8 +7,9 @@ public class User : MonoBehaviour
     public int targetFloor;
     public int curremtFloor = 1;
 
-    bool move = false;
     public GameObject targetObj;
+
+    float[] floor2y = { 0, 2, 5, 8, 11, 14 };
 
     void Start()
     {
@@ -17,13 +19,11 @@ public class User : MonoBehaviour
 
     void Update()
     {
-        if (move)
-        {
-            Vector3 target = targetObj.transform.position;
-            target.y = transform.position.y;
-            transform.LookAt(target);
-            transform.Translate(Vector3.forward * 0.05f);
-        }
+        Vector3 target = targetObj.transform.position;
+        target.y = transform.position.y;
+        transform.LookAt(target);
+        transform.Translate(Vector3.forward * 0.05f);
+
 
         if (transform.position.y < 0)
         {
@@ -38,17 +38,16 @@ public class User : MonoBehaviour
     public void shiftTarget(GameObject obj)
     {
         targetObj = obj;
-        move = true;
     }
 
     // 目標階の更新、それに応じた色の変更
     public void statusUpdate()
     {
-        curremtFloor = targetFloor;
+        curremtFloor = Array.IndexOf(floor2y, Mathf.RoundToInt(transform.position.y));
 
         do
         {
-            targetFloor = Random.Range(1, 6);
+            targetFloor = UnityEngine.Random.Range(1, 6);
         }
         while (curremtFloor == targetFloor);
 
@@ -73,7 +72,5 @@ public class User : MonoBehaviour
                 GetComponent<Renderer>().material.color = Color.black;
                 break;
         }
-
-        move = true;
     }
 }
